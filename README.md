@@ -1,6 +1,6 @@
 # ija-app
-Autors: Patrik Tomov and Maroš Geffert
-Points earned: 60/80
+- Autors: Patrik Tomov and Maroš Geffert
+- Points earned: 60/80
 
 # Folders info:
 - src/          - (fold.) source files (package hierarchy)
