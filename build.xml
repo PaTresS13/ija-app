@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project basedir="." name="ija-app" default="main">
+
+	<property name="src.dir" value="src" />
+	<property name="build.dir" value="build" />
+	<property name="dest.dir" value="dest" />
+	<property name="lib.dir" value="lib" />
+	<property name="resources.dir" value="data" />
+	<property name="doc.dir" value="doc" />
+	
+	<property name="main-class" value="sample.Main" />
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="libs-download">
+		<exec executable="/bin/bash" dir="./lib">
+			<arg value="get-libs.sh"/>
+		</exec>
+	</target>
+
+
+	<target name="make-doc">
+		<delete dir="${doc.dir}"/>
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}">
+			<fileset dir="${src.dir}" includes="**/*.java"/>
+			<classpath>
+				<fileset dir="${lib.dir}"/>
+			</classpath>
+			<doctitle>
+				<![CDATA[<h1>JAVA DOC</h1>]]>
+			</doctitle>
+		</javadoc>
+	</target>
+
+
+	<target name="build" depends="clean,libs-download">
+		<mkdir dir="${build.dir}"/>
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"/>
+	</target>
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+	</path>
+	
+	<target name="compile" depends="build,make-doc">
+        	<jar destfile="${dest.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+		<fileset dir="${resources.dir}"/>
+            	<manifest>
+                	<attribute name="Main-Class" value="sample.Main"/>
+            	</manifest>
+        	</jar>
+    	</target>
+
+	<target name="run">
+        	<java fork="true" classname="${main-class}">
+            	<classpath>
+                	<path refid="classpath"/>
+                	<path location="${dest.dir}/${ant.project.name}.jar"/>
+            	</classpath>
+        	</java>
+    	</target>
+</project>
